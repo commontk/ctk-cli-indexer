@@ -33,6 +33,12 @@ DOC_TYPE = 'cli'
 docs = simplejson.load(args.json_filename)
 
 es = elasticsearch.Elasticsearch()
+es.indices.create(index = INDEX, ignore = 400) # ignore already existing index
+es.indices.put_mapping(index = INDEX, doc_type = DOC_TYPE, body = {
+    DOC_TYPE : {
+        "_timestamp" : { "enabled" : True }
+    }})
+
 
 try:
     existing = [doc['_id'] for doc in

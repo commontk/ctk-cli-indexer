@@ -13,7 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import sys, argparse
+import sys, argparse, datetime
 import simplejson
 import elasticsearch
 
@@ -43,19 +43,20 @@ existing = [doc['_id'] for doc in
                 fields = ['_id'],
                 size = 100000)['hits']['hits']]
 
-for doc in docs:
+for timestamp, doc in docs:
     doc['source'] = args.source
     doc_id = '%s:%s' % (args.source, doc['name'])
+    timestamp = datetime.datetime.fromtimestamp(timestamp)
 
     try:
         old = es.get(INDEX, doc_id, DOC_TYPE)
     except elasticsearch.exceptions.NotFoundError:
-        es.index(INDEX, DOC_TYPE, body = doc, id = doc_id)
+        es.index(INDEX, DOC_TYPE, body = doc, id = doc_id, timestamp = timestamp)
         sys.stdout.write("added new document '%s'.\n" % doc_id)
     else:
         existing.remove(old['_id'])
         if old['_source'] != doc:
-            es.index(INDEX, DOC_TYPE, body = doc, id = doc_id)
+            es.index(INDEX, DOC_TYPE, body = doc, id = doc_id, timestamp = timestamp)
             sys.stdout.write("changed document '%s'.\n" % doc_id)
         else:
             sys.stdout.write("leaving '%s' alone, no change...\n" % doc_id)

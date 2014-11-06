@@ -33,8 +33,10 @@ for basedir in args.base_directory:
         sys.stderr.write('processing %s...\n' % (os.path.basename(exe_filename), ))
         cli = cli_modules.CLIModule(exe_filename)
 
-        docs.append(dict((attr, getattr(cli, attr))
-                         for attr in INDEX_ATTRIBUTES))
+        timestamp = os.path.getmtime(exe_filename)
+        doc = dict((attr, getattr(cli, attr))
+                   for attr in INDEX_ATTRIBUTES)
+        docs.append((timestamp, doc))
 
 simplejson.dump(docs, args.json_filename, indent = '  ')
 args.json_filename.write('\n')

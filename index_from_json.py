@@ -62,5 +62,5 @@ for timestamp, doc in docs:
             sys.stdout.write("leaving '%s' alone, no change...\n" % doc_id)
 
 for doc_id in existing:
-    sys.stdout.write("removing '%s', which is no longer in the '%s' JSON..." % (doc_id, args.source))
+    sys.stdout.write("removing '%s', which is no longer in the '%s' JSON...\n" % (doc_id, args.source))
     es.delete(INDEX, DOC_TYPE, doc_id)

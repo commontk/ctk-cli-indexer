@@ -34,14 +34,17 @@ docs = simplejson.load(args.json_filename)
 
 es = elasticsearch.Elasticsearch()
 
-existing = [doc['_id'] for doc in
-            es.search(INDEX, DOC_TYPE, body = dict(
-                query = dict(
-                    term = dict(
-                        source = args.source)
-                    )),
-                fields = ['_id'],
-                size = 100000)['hits']['hits']]
+try:
+    existing = [doc['_id'] for doc in
+                es.search(INDEX, DOC_TYPE, body = dict(
+                    query = dict(
+                        term = dict(
+                            source = args.source)
+                        )),
+                    fields = ['_id'],
+                    size = 100000)['hits']['hits']]
+except elasticsearch.exceptions.NotFoundError:
+    existing = []
 
 for timestamp, doc in docs:
     doc['source'] = args.source

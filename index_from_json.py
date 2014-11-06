@@ -24,6 +24,8 @@ parser.add_argument('source', help = "identifier for the source "
                     "(e.g. 'Slicer' or 'nifty-reg') of this set of CLI modules "
                     "(will also be used to remove all documents from this source "
                     "from the Elasticsearch index if they are not in the JSON anymore)")
+parser.add_argument('--host', default = 'localhost', help = 'hostname elasticsearch is listening on')
+parser.add_argument('--port', default = 9200, help = 'port elasticsearch is listening on')
 
 args = parser.parse_args()
 
@@ -32,7 +34,9 @@ DOC_TYPE = 'cli'
 
 docs = simplejson.load(args.json_filename)
 
-es = elasticsearch.Elasticsearch()
+# TODO: at the moment, the commandline is limited to *one* host/port, and no SSL or URL prefix
+es = elasticsearch.Elasticsearch([dict(host = args.host, port = args.port)])
+
 es.indices.create(index = INDEX, ignore = 400) # ignore already existing index
 es.indices.put_mapping(index = INDEX, doc_type = DOC_TYPE, body = {
     DOC_TYPE : {

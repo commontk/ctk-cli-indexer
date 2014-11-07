@@ -40,7 +40,13 @@ es = elasticsearch.Elasticsearch([dict(host = args.host, port = args.port)])
 es.indices.create(index = INDEX, ignore = 400) # ignore already existing index
 es.indices.put_mapping(index = INDEX, doc_type = DOC_TYPE, body = {
     DOC_TYPE : {
-        "_timestamp" : { "enabled" : True }
+        "_timestamp" : { "enabled" : True },
+        "properties" : {
+            "contributor": {
+                "type"  :  "string",
+                "index" :  "not_analyzed"
+            }
+        }
     }})
 
 

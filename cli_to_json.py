@@ -36,6 +36,14 @@ for basedir in args.base_directory:
         timestamp = os.path.getmtime(exe_filename)
         doc = dict((attr, getattr(cli, attr))
                    for attr in INDEX_ATTRIBUTES)
+
+        doc['group_count'] = len(cli)
+        doc['group_labels'] = '\n'.join(group.label for group in cli if group.label)
+        doc['advanced_group_count'] = sum(group.advanced for group in cli)
+        doc['parameter_count'] = sum(len(group) for group in cli)
+        doc['parameter_names'] = '\n'.join(p.name for p in cli.parameters() if p.name)
+        doc['parameter_labels'] = '\n'.join(p.label for p in cli.parameters() if p.label)
+
         docs.append((timestamp, doc))
 
 simplejson.dump(docs, args.json_filename, indent = '  ')

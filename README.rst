@@ -1,3 +1,4 @@
+===========
 cli-indexer
 ===========
 
@@ -55,3 +56,30 @@ index_from_json.py
   that pulls the above-mentioned .json URLs regularly and updates a central database.
   A Kibana dashboard will then give interested people an overview over the available modules
   from multiple sites.
+
+System Prerequisites
+====================
+
+The following software packages are required to be installed on your system:
+
+* `Python <http://python.org>`_
+* `pip <https://pypi.python.org/pypi/pi>`_
+* `Git <http://git-scm.com/>`_ (for developer only)
+
+Installation for user
+=====================
+
+    pip install cli-indexer
+
+Installation for developer
+==========================
+
+First download the source: ::
+
+    git clone git://github.com/commontk/cli-indexer.git
+
+To use the module, you must install some external python package
+dependencies: ::
+
+    cd cli-indexer
+    pip install -r requirements.txt

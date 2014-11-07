@@ -13,7 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import sys, os, argparse
+import sys, os, argparse, re
 import simplejson
 import cli_modules
 
@@ -37,6 +37,10 @@ for basedir in args.base_directory:
         doc = dict((attr, getattr(cli, attr))
                    for attr in INDEX_ATTRIBUTES)
 
+        authors = re.sub(r'\([^)]*\)', '', cli.contributor) if cli.contributor else ""
+        doc['authors'] = [author.strip() for author in re.split(r' *, *(?:and *)?| +and +', authors)
+                          if not author.startswith('http://') or re.search('@| -at- ', author)]
+        
         doc['group_count'] = len(cli)
         doc['group_labels'] = '\n'.join(group.label for group in cli if group.label)
         doc['advanced_group_count'] = sum(group.advanced for group in cli)

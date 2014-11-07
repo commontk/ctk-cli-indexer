@@ -45,6 +45,10 @@ es.indices.put_mapping(index = INDEX, doc_type = DOC_TYPE, body = {
             "contributor": {
                 "type"  :  "string",
                 "index" :  "not_analyzed"
+            },
+            "authors": {
+                "type"  :  "string",
+                "index" :  "not_analyzed"
             }
         }
     }})

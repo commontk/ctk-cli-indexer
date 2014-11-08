@@ -1,18 +1,16 @@
 #!/usr/bin/env python
-
+import os, codecs
 from setuptools import setup
 from pip.req import parse_requirements
-from codecs import open # To use a consistent encoding
-from os import path
 
-here = path.abspath(path.dirname(__file__))
+here = os.path.abspath(os.path.dirname(__file__))
 
 # Get the long description from the README
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+with codecs.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     readme = f.read()
 
 # parse_requirements() returns generator of pip.req.InstallRequirement objects
-install_reqs = parse_requirements(path.join(here, 'requirements.txt'))
+install_reqs = parse_requirements(os.path.join(here, 'requirements.txt'))
 
 # reqs is a list of requirement spec strings
 reqs = [str(ir.req) for ir in install_reqs]

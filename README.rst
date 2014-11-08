@@ -1,6 +1,6 @@
-===========
-cli-indexer
-===========
+===============
+ctk-cli-indexer
+===============
 
 The files in this repository allow you to create an ElasticSearch database containing
 information on available CLI modules.  The idea is that we have a public Kibana dashboard
@@ -69,17 +69,17 @@ The following software packages are required to be installed on your system:
 Installation for user
 =====================
 
-    pip install cli-indexer
+    pip install ctk-cli-indexer
 
 Installation for developer
 ==========================
 
 First download the source: ::
 
-    git clone git://github.com/commontk/cli-indexer.git
+    git clone git://github.com/commontk/ctk-cli-indexer.git
 
 To use the module, you must install some external python package
 dependencies: ::
 
-    cd cli-indexer
+    cd ctk-cli-indexer
     pip install -r requirements.txt

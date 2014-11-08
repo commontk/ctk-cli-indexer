@@ -7,17 +7,17 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-# Get the long description from the relevant file
+# Get the long description from the README
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     readme = f.read()
 
 # parse_requirements() returns generator of pip.req.InstallRequirement objects
 install_reqs = parse_requirements(path.join(here, 'requirements.txt'))
 
-# reqs is a list of requirement
+# reqs is a list of requirement spec strings
 reqs = [str(ir.req) for ir in install_reqs]
 
-setup(name='cli-indexer',
+setup(name='ctk-cli-indexer',
     version='0.1.dev3',
     description=('Python utilities for creating an ElasticSearch database '
                  'containing information on available CLI modules'),
@@ -32,7 +32,7 @@ setup(name='cli-indexer',
     ],
     author='Hans Meine, Jean-Christophe Fillion-Robin',
     author_email='hans_meine@gmx.net, jchris.fillionr@kitware.com',
-    url='https://github.com/commontk/cli-indexer',
+    url='https://github.com/commontk/ctk-cli-indexer',
     install_requires=reqs,
     scripts=['cli_modules.py', 'cli_to_json.py', 'index_from_json.py'],
     package_data={

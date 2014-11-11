@@ -15,7 +15,7 @@
 
 import sys, os, argparse, re
 import simplejson
-import cli_modules
+import ctk_cli
 
 parser = argparse.ArgumentParser(description = 'create JSON description from CLI modules')
 parser.add_argument('base_directory', nargs = '+',
@@ -29,9 +29,9 @@ INDEX_ATTRIBUTES = 'name title version category description contributor acknowle
 docs = []
 
 for basedir in args.base_directory:
-    for exe_filename in cli_modules.listCLIExecutables(basedir):
+    for exe_filename in ctk_cli.listCLIExecutables(basedir):
         sys.stderr.write('processing %s...\n' % (os.path.basename(exe_filename), ))
-        cli = cli_modules.CLIModule(exe_filename)
+        cli = ctk_cli.CLIModule(exe_filename)
 
         timestamp = os.path.getmtime(exe_filename)
         doc = dict((attr, getattr(cli, attr))

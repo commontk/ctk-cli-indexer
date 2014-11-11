@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import os, codecs
 from setuptools import setup
-from pip.req import parse_requirements
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -9,11 +8,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     readme = f.read()
 
-# parse_requirements() returns generator of pip.req.InstallRequirement objects
-install_reqs = parse_requirements(os.path.join(here, 'requirements.txt'))
-
 # reqs is a list of requirement spec strings
-reqs = [str(ir.req) for ir in install_reqs]
+with file('requirements.txt') as f:
+    reqs = [req.strip() for req in f]
 
 setup(name='ctk-cli-indexer',
     version='0.1.dev3',

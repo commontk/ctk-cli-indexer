@@ -2,7 +2,7 @@
 ctk-cli-indexer
 ===============
 
-The files in this repository allow you to create an ElasticSearch_ database containing
+The files in this repository allow you to create an Elasticsearch_ database containing
 information on available CLI modules.  The idea is that we have a public Kibana_ dashboard
 listing CLI modules from multiple sources, so there are two scripts:
 
@@ -27,7 +27,7 @@ cli_to_json.py
   that the resulting .json files are published on some website.
 
 index_from_json.py
-  Takes a JSON file and updates an ElasticSearch_ database.  An identifier for the source
+  Takes a JSON file and updates an Elasticsearch_ database.  An identifier for the source
   of the CLI modules is passed as second parameter, and the script takes care to delete
   old documents in the database (CLIs that got removed), and will also maintain timestamps
   of the last change of each CLI (i.e. not re-upload stuff that did not change, as well as
@@ -74,7 +74,7 @@ The following python packages will be automatically installed if not present (se
 package manager):
 
 * `simplejson <https://pypi.python.org/pypi/simplejson/>`_
-* `elasticsearch <https://pypi.python.org/pypi/elasticsearch>`_
+* `elasticsearch-py <https://pypi.python.org/pypi/elasticsearch>`_
 * `ctk-cli <https://pypi.python.org/pypi/ctk-cli>`_
 
 Installation for user

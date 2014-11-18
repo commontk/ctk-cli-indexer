@@ -66,8 +66,16 @@ System Prerequisites
 The following software packages are required to be installed on your system:
 
 * `Python <http://python.org>`_
-* `pip <https://pypi.python.org/pypi/pi>`_ (recommended)
+* `pip <https://pypi.python.org/pypi/pi>`_ (recommended for installation)
 * `Git <http://git-scm.com/>`_ (for developer only)
+
+The following python packages will be automatically installed if not present (see
+`requirements.txt`, listed here in case you prefer to install them via your system's
+package manager):
+
+* `simplejson <https://pypi.python.org/pypi/simplejson/>`_
+* `elasticsearch <https://pypi.python.org/pypi/elasticsearch>`_
+* `ctk-cli <https://pypi.python.org/pypi/ctk-cli>`_
 
 Installation for user
 =====================
@@ -90,3 +98,64 @@ dependencies: ::
 
     cd ctk-cli-indexer
     pip install -r requirements.txt
+
+Elasticsearch Setup
+===================
+
+In order to use this code, you must have access to a running Elasticsearch_ server.  This
+section shall give just the basic instructions for getting started.  First, download_ the
+latest stable elasticsearch and kibana tarballs (logstash is not necessary / used here).
+
+Elasticsearch_ is written in Java, so you can basically unpack the tarball and run
+``bin/elasticsearch``, and the server should be running on http://localhost:9200/ (yes,
+you can just try that URL in the browser, and you should get some status JSON).  This
+default location is also built into ``index_from_json.py``, so you may immediately start
+indexing.  One may use http://localhost:9200/cli/cli/_search?pretty=1 to check whether
+there is data in the index.
+
+Kibana_ is a purely browser-based web application (based on client-side HTML and JS), so
+you can serve the files using any kind of HTTP server, e.g.::
+
+  cd kibana-3.1.1/
+  python -m SimpleHTTPServer
+
+which will serve Kibana on http://localhost:8000/ You may even be able to use Kibana
+without any HTTP server, just by opening ``kibana-x.y.z/index.html`` within your browser.
+In that case, you may want to edit ``config.js`` to point to the server like this::
+
+  elasticsearch: "http://localhost:9200",
+
+That's it!  If you see the welcome dashboard in the browser, you're all set.  Note that
+you can even store dashboards within Kibana; by default, they will be stored within
+Elasticsearch, so you don't even have to care about filesystem access.
+
+.. _download: http://www.elasticsearch.org/overview/elkdownloads/
+
+First Steps with Kibana
+=======================
+
+I suggest to start with a blank dashboard (link at the bottom of the default dashboard).
+Start by going to the dashboard settings (cog in the upper right corner) and under
+"Index", select 'cli' as default index and enable autocompletion under "Preload Fields".
+
+Next, add rows ("Rows" tab in the dashboard settings), for instance, one with 200px
+height, one with 300px, and a third with 500px.  Don't forget to press "Create Row" for
+each row (in particular, also for the last one), then press "Save".
+
+Within each row, there is an (invisible) 12-column layout, so you want to add "widgets"
+now that span either 3 or 4 such columns.  Start with "Terms" widgets only, try different
+fields (e.g. "license"), and different view options (in particular, the bar/pie/table
+styles).
+
+The widgets allow interactive filtering, e.g. click on a specific term to filter by
+license / author / source / category; active filters will be listed and can be cleared at
+the top (make sure that line is not collapsed).  There is also a search row where you can
+try entering keywords.
+
+The last row (which we made particularly high) was intended for a "Table" widget (like on
+the sample dashboard), which can be used to list all matching documents.
+
+Now play around with the various options, and don't forget to save your dashboard (floppy
+symbol near the upper right corner).  If you enable "Save to > Export" and "Load from >
+Local file" under "Controls" in the dashboard settings, you can also download/upload the
+dashboard as JSON.  Furthermore, you can make the dashboard your default/home dashboard.

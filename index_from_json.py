@@ -24,8 +24,8 @@ parser.add_argument('source', help = "identifier for the source "
                     "(e.g. 'Slicer' or 'nifty-reg') of this set of CLI modules "
                     "(will also be used to remove all documents from this source "
                     "from the Elasticsearch index if they are not in the JSON anymore)")
-parser.add_argument('--host', default = 'localhost', help = 'hostname elasticsearch is listening on')
-parser.add_argument('--port', default = 9200, help = 'port elasticsearch is listening on')
+parser.add_argument('--host', default = 'localhost', help = 'hostname elasticsearch is listening on (default: localhost)')
+parser.add_argument('--port', default = 9200, help = 'port elasticsearch is listening on (default: 9200)')
 
 args = parser.parse_args()
 

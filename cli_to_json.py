@@ -15,7 +15,7 @@
 
 import sys, os, argparse
 import simplejson
-import ctk_cli_indexer
+from ctk_cli_indexer.cli_to_json import scan_directories
 
 parser = argparse.ArgumentParser(description = 'create JSON description from CLI modules')
 parser.add_argument('base_directory', nargs = '+',
@@ -24,7 +24,7 @@ parser.add_argument('--json_filename', '-o', type = argparse.FileType('w'), defa
 
 args = parser.parse_args()
 
-docs = ctk_cli_indexer.scan_directories(args.base_directory)
+docs = scan_directories(args.base_directory)
 
 simplejson.dump(docs, args.json_filename, indent = '  ')
 args.json_filename.write('\n')

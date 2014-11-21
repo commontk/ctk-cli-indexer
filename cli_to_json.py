@@ -13,7 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import sys, os, argparse
+import sys, argparse
 import simplejson
 from ctk_cli_indexer.cli_to_json import scan_directories
 

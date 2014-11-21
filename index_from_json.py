@@ -13,9 +13,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import sys, argparse, datetime
+import argparse
 import simplejson
 import elasticsearch
+from ctk_cli_indexer.index_from_json import create_elasticsearch_index, update_elasticsearch_index
 
 parser = argparse.ArgumentParser(description = 'update elasticsearch index from JSON description of CLI modules')
 parser.add_argument('json_filename', type = argparse.FileType('r'),
@@ -29,66 +30,11 @@ parser.add_argument('--port', default = 9200, help = 'port elasticsearch is list
 
 args = parser.parse_args()
 
-INDEX = 'cli'
-DOC_TYPE = 'cli'
-
 docs = simplejson.load(args.json_filename)
 
 # TODO: at the moment, the commandline is limited to *one* host/port, and no SSL or URL prefix
 es = elasticsearch.Elasticsearch([dict(host = args.host, port = args.port)])
 
-es.indices.create(index = INDEX, ignore = 400) # ignore already existing index
-es.indices.put_mapping(index = INDEX, doc_type = DOC_TYPE, body = {
-    DOC_TYPE : {
-        "_timestamp" : { "enabled" : True },
-        "properties" : {
-            "contributor": {
-                "type"  :  "string",
-                "index" :  "not_analyzed"
-            },
-            "authors": {
-                "type"  :  "string",
-                "index" :  "not_analyzed"
-            },
-            "license": {
-                "type"  :  "string",
-                "index" :  "not_analyzed"
-            },
-        }
-    }})
-# es.indices.delete('cli')
+create_elasticsearch_index(es)
 
-
-try:
-    existing = [doc['_id'] for doc in
-                es.search(INDEX, DOC_TYPE, body = dict(
-                    query = dict(
-                        term = dict(
-                            source = args.source)
-                        )),
-                    fields = ['_id'],
-                    size = 100000)['hits']['hits']]
-except elasticsearch.exceptions.NotFoundError:
-    existing = []
-
-for timestamp, doc in docs:
-    doc['source'] = args.source
-    doc_id = '%s:%s' % (args.source, doc['name'])
-    timestamp = datetime.datetime.fromtimestamp(timestamp)
-
-    try:
-        old = es.get(INDEX, doc_id, DOC_TYPE)
-    except elasticsearch.exceptions.NotFoundError:
-        es.index(INDEX, DOC_TYPE, body = doc, id = doc_id, timestamp = timestamp)
-        sys.stdout.write("added new document '%s'.\n" % doc_id)
-    else:
-        existing.remove(old['_id'])
-        if old['_source'] != doc:
-            es.index(INDEX, DOC_TYPE, body = doc, id = doc_id, timestamp = timestamp)
-            sys.stdout.write("changed document '%s'.\n" % doc_id)
-        else:
-            sys.stdout.write("leaving '%s' alone, no change...\n" % doc_id)
-
-for doc_id in existing:
-    sys.stdout.write("removing '%s', which is no longer in the '%s' JSON...\n" % (doc_id, args.source))
-    es.delete(INDEX, DOC_TYPE, doc_id)
+update_elasticsearch_index(es, docs, args.source)

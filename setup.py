@@ -13,7 +13,7 @@ with file('requirements.txt') as f:
     reqs = [req.strip() for req in f]
 
 setup(name='ctk-cli-indexer',
-    version='0.1.dev3',
+    version='0.2',
     description=('Python utilities for creating an ElasticSearch database '
                  'containing information on available CLI modules'),
     long_description=readme,
@@ -29,6 +29,7 @@ setup(name='ctk-cli-indexer',
     author_email='hans_meine@gmx.net, jchris.fillionr@kitware.com',
     url='https://github.com/commontk/ctk-cli-indexer',
     install_requires=reqs,
+    py_modules=['ctk_cli_indexer'],
     scripts=['cli_to_json.py', 'index_from_json.py'],
     package_data={
         '': ['requirements.txt'],

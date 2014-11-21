@@ -49,9 +49,14 @@ es.indices.put_mapping(index = INDEX, doc_type = DOC_TYPE, body = {
             "authors": {
                 "type"  :  "string",
                 "index" :  "not_analyzed"
-            }
+            },
+            "license": {
+                "type"  :  "string",
+                "index" :  "not_analyzed"
+            },
         }
     }})
+# es.indices.delete('cli')
 
 
 try:

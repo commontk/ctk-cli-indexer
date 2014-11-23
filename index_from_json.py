@@ -16,7 +16,7 @@
 import argparse
 import simplejson
 import elasticsearch
-from ctk_cli_indexer.index_from_json import create_elasticsearch_index, update_elasticsearch_index
+from ctk_cli_indexer.indexer import create_elasticsearch_index, update_elasticsearch_index
 
 parser = argparse.ArgumentParser(description = 'update elasticsearch index from JSON description of CLI modules')
 parser.add_argument('json_filename', type = argparse.FileType('r'),

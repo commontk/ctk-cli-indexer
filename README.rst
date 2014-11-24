@@ -4,20 +4,18 @@ ctk-cli-indexer
 
 The files in this repository allow you to create an Elasticsearch_ database containing
 information on available CLI modules.  The idea is that we have a public Kibana_ dashboard
-listing CLI modules from multiple sources, so there are two scripts:
+listing CLI modules from multiple sources, so there is a script with two modes:
 
-cli_to_json.py
+'extract' mode
   Extracts JSON descriptions from a set of CLI modules (in one or more common directories). ::
 
-    # ./cli_to_json.py --help
-    usage: cli_to_json.py [-h] [--json_filename JSON_FILENAME]
-                          base_directory [base_directory ...]
-
-    create JSON description from CLI modules
+    # ./ctk_cli_indexer.py extract --help
+    usage: ctk_cli_indexer.py extract [-h] [--json_filename JSON_FILENAME]
+                                      base_directory [base_directory ...]
 
     positional arguments:
       base_directory        directories (at least one) in which to search for CLI
-                            module executables
+                            module executables, or direct paths to executables
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -26,31 +24,34 @@ cli_to_json.py
   This is to be run by the administrators of sites that offer CLI modules, and the idea is
   that the resulting .json files are published on some website.
 
-index_from_json.py
-  Takes a JSON file and updates an Elasticsearch_ database.  An identifier for the source
-  of the CLI modules is passed as second parameter, and the script takes care to delete
-  old documents in the database (CLIs that got removed), and will also maintain timestamps
-  of the last change of each CLI (i.e. not re-upload stuff that did not change, as well as
-  mark each change with the modification time of the CLI executable that introduced the
-  change). ::
+'index' mode
+  Takes a JSON file (or a list of CLI executables) and updates an
+  Elasticsearch_ database.  An identifier for the source of the CLI
+  modules is passed as first parameter, and the script takes care to
+  delete old documents in the database (CLIs that got removed), and
+  will also maintain timestamps of the last change of each CLI
+  (i.e. not re-upload stuff that did not change, as well as mark each
+  change with the modification time of the CLI executable that
+  introduced the change). Instead of passing a JSON file, you may also
+  pass a list of directories or CLI executables directly. ::
 
-    # ./index_from_json.py --help
-    usage: index_from_json.py [-h] [--host HOST] [--port PORT]
-                              json_filename source
-
-    update elasticsearch index from JSON description of CLI modules
+    # ./ctk_cli_indexer.py index --help
+    usage: ctk_cli_indexer.py index [-h] [--host HOST] [--port PORT]
+                                    source_name path [path ...]
 
     positional arguments:
-      json_filename  name of JSON file as created by cli_to_json.py
-      source         identifier for the source (e.g. 'Slicer' or 'nifty-reg') of
-                     this set of CLI modules (will also be used to remove all
-                     documents from this source from the Elasticsearch index if
-                     they are not in the JSON anymore)
+      source_name  identifier for the source (e.g. 'slicer' or 'nifty-reg') of
+                   this set of CLI modules (will be used to remove old documents
+                   from this source from the Elasticsearch index if they are no
+                   longer present)
+      path         one or more directories in which to search for CLI module
+                   executables, paths to CLI executables, or (exactly one) JSON
+                   file as created by `extract` subcommand
 
     optional arguments:
-      -h, --help     show this help message and exit
-      --host HOST    hostname elasticsearch is listening on
-      --port PORT    port elasticsearch is listening on
+      -h, --help   show this help message and exit
+      --host HOST  hostname elasticsearch is listening on (default: localhost)
+      --port PORT  port elasticsearch is listening on (default: 9200)
 
   This script should be run by a cron job (i.e. setup by a CTK administrator), from a script
   that pulls the above-mentioned .json URLs regularly and updates a central database.

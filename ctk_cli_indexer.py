@@ -57,7 +57,8 @@ extractor_parser = commands.add_parser(
     'extract', help = 'only create JSON description from CLI modules (no DB access)')
 extractor_parser.add_argument(
     'base_directory', nargs = '+',
-    help = 'directories (at least one) in which to search for CLI module executables')
+    help = 'directories (at least one) in which to search for CLI module executables, '
+    'or direct paths to executables')
 extractor_parser.add_argument(
     '--json_filename', '-o', type = argparse.FileType('w'), default = sys.stdout)
 extractor_parser.set_defaults(action = extract)

@@ -25,16 +25,24 @@ def extract_cli_properties(exe_filename):
     return timestamp, doc
 
 
-def scan_directories(base_directories, verbose = True):
+def listCLIExecutables(paths):
     import ctk_cli
 
+    for path in paths:
+        if os.path.isdir(path):
+            for exe_filename in ctk_cli.listCLIExecutables(path):
+                yield exe_filename
+        elif ctk_cli.isCLIExecutable(path):
+            yield path
+
+
+def scan_directories(base_directories, verbose = True):
     result = []
 
-    for basedir in base_directories:
-        for exe_filename in ctk_cli.listCLIExecutables(basedir):
-            if verbose:
-                sys.stderr.write('processing %s...\n' % (os.path.basename(exe_filename), ))
-            timestamp, doc = extract_cli_properties(exe_filename)
-            result.append((timestamp, doc))
+    for exe_filename in listCLIExecutables(base_directories):
+        if verbose:
+            sys.stderr.write('processing %s...\n' % (os.path.basename(exe_filename), ))
+        timestamp, doc = extract_cli_properties(exe_filename)
+        result.append((timestamp, doc))
 
     return result

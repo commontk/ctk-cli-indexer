@@ -160,3 +160,4 @@ Now play around with the various options, and don't forget to save your dashboar
 symbol near the upper right corner).  If you enable "Save to > Export" and "Load from >
 Local file" under "Controls" in the dashboard settings, you can also download/upload the
 dashboard as JSON.  Furthermore, you can make the dashboard your default/home dashboard.
+Within this repository, you also find an example dashboard in the file `cli_dashboard.json`.

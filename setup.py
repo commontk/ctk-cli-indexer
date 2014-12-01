@@ -30,7 +30,7 @@ setup(name='ctk-cli-indexer',
     url='https://github.com/commontk/ctk-cli-indexer',
     install_requires=reqs,
     packages=['ctk_cli_indexer'],
-    scripts=['cli_to_json.py', 'index_from_json.py'],
+    scripts=['ctk_cli_indexer.py'],
     package_data={
         '': ['requirements.txt'],
     },

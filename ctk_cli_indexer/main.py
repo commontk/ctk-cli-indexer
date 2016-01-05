@@ -13,9 +13,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import sys, os, argparse
+import sys, os, argparse, logging
 import simplejson
-from ctk_cli_indexer.extractor import scan_directories
+from ctk_cli_indexer.extractor import try_scan_directories
 
 class VerboseErrorParser(argparse.ArgumentParser):
     def error(self, message):
@@ -25,9 +25,11 @@ class VerboseErrorParser(argparse.ArgumentParser):
 
 
 def extract(args):
-    docs = scan_directories(args.base_directory)
+    errors, docs = try_scan_directories(args.base_directory)
     simplejson.dump(docs, args.json_filename, indent = '  ')
     args.json_filename.write('\n')
+    if errors:
+        sys.stderr.write('%d CLI executables had fatal errors and were excluded from the output.\n' % (len(errors), ))
 
 def index(args):
     # local imports, so that we can extract without elasticsearch being available

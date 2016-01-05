@@ -36,13 +36,31 @@ def listCLIExecutables(paths):
             yield path
 
 
-def scan_directories(base_directories, verbose = True):
-    result = []
+def _scan_directories_helper(base_directories, verbose, skip_errors):
+    errors = []
+    documents = []
 
     for exe_filename in listCLIExecutables(base_directories):
         if verbose:
             sys.stderr.write('processing %s...\n' % (os.path.basename(exe_filename), ))
-        timestamp, doc = extract_cli_properties(exe_filename)
-        result.append((timestamp, doc))
+        try:
+            timestamp, doc = extract_cli_properties(exe_filename)
+        except Exception, e:
+            sys.stderr.write('ERROR (skipping %s): %s\n' % (os.path.basename(exe_filename), e))
+            errors.append(exe_filename)
+            continue
+        documents.append((timestamp, doc))
 
-    return result
+    return errors, documents
+
+
+def scan_directories(base_directories, verbose = True):
+    errors, documents = _scan_directories_helper(base_directories, verbose, skip_errors = False)
+    return documents
+
+
+def try_scan_directories(base_directories, verbose = True):
+    """Like scan_directories(), but will skip errors.  Returns a tuple (errors, documents)
+    where errors is a list of cli executables whose XML could not be parsed."""
+    errors, documents = _scan_directories_helper(base_directories, verbose, skip_errors = True)
+    return errors, documents

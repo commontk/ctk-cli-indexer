@@ -49,40 +49,44 @@ def index(args):
 
     update_elasticsearch_index(es, docs, args.source_name)
 
+def main():
+    parser = VerboseErrorParser(description = 'index CLI modules in elasticsearch database')
 
-parser = VerboseErrorParser(description = 'index CLI modules in elasticsearch database')
-
-commands = parser.add_subparsers()
-extractor_parser = commands.add_parser(
-    'extract', help = 'only create JSON description from CLI modules (no DB access)')
-extractor_parser.add_argument(
-    'base_directory', nargs = '+',
-    help = 'directories (at least one) in which to search for CLI module executables, '
-    'or direct paths to executables')
-extractor_parser.add_argument(
-    '--json_filename', '-o', type = argparse.FileType('w'), default = sys.stdout)
-extractor_parser.set_defaults(action = extract)
-
-
-index_parser = commands.add_parser(
-    'index', help = 'update elasticsearch index (given CLI modules or JSON description)')
-index_parser.add_argument('--host', default = 'localhost',
-                          help = 'hostname elasticsearch is listening on (default: localhost)')
-index_parser.add_argument('--port', default = 9200,
-                          help = 'port elasticsearch is listening on (default: 9200)')
-
-index_parser.add_argument(
-    'source_name', help = "identifier for the source "
-    "(e.g. 'slicer' or 'nifty-reg') of this set of CLI modules "
-    "(will be used to remove old documents from this source "
-    "from the Elasticsearch index if they are no longer present)")
-index_parser.add_argument(
-    'path', nargs = '+',
-    help = 'one or more directories in which to search for CLI module executables, '
-    'paths to CLI executables, or (exactly one) JSON file as created by `extract` subcommand')
-
-index_parser.set_defaults(action = index)
+    commands = parser.add_subparsers()
+    extractor_parser = commands.add_parser(
+        'extract', help = 'only create JSON description from CLI modules (no DB access)')
+    extractor_parser.add_argument(
+        'base_directory', nargs = '+',
+        help = 'directories (at least one) in which to search for CLI module executables, '
+        'or direct paths to executables')
+    extractor_parser.add_argument(
+        '--json_filename', '-o', type = argparse.FileType('w'), default = sys.stdout)
+    extractor_parser.set_defaults(action = extract)
 
 
-args = parser.parse_args()
-args.action(args)
+    index_parser = commands.add_parser(
+        'index', help = 'update elasticsearch index (given CLI modules or JSON description)')
+    index_parser.add_argument('--host', default = 'localhost',
+                              help = 'hostname elasticsearch is listening on (default: localhost)')
+    index_parser.add_argument('--port', default = 9200,
+                              help = 'port elasticsearch is listening on (default: 9200)')
+
+    index_parser.add_argument(
+        'source_name', help = "identifier for the source "
+        "(e.g. 'slicer' or 'nifty-reg') of this set of CLI modules "
+        "(will be used to remove old documents from this source "
+        "from the Elasticsearch index if they are no longer present)")
+    index_parser.add_argument(
+        'path', nargs = '+',
+        help = 'one or more directories in which to search for CLI module executables, '
+        'paths to CLI executables, or (exactly one) JSON file as created by `extract` subcommand')
+
+    index_parser.set_defaults(action = index)
+
+
+    args = parser.parse_args()
+    args.action(args)
+
+
+if __name__ == '__main__':
+    main()

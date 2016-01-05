@@ -13,7 +13,7 @@ with file('requirements.txt') as f:
     reqs = [req.strip() for req in f]
 
 setup(name='ctk-cli-indexer',
-    version='0.4',
+    version='0.5',
     description=('Python utilities for creating an ElasticSearch database '
                  'containing information on available CLI modules'),
     long_description=readme,

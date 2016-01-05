@@ -54,6 +54,8 @@ def index(args):
 def main():
     parser = VerboseErrorParser(description = 'index CLI modules in elasticsearch database')
 
+    logging.basicConfig()
+    
     commands = parser.add_subparsers()
     extractor_parser = commands.add_parser(
         'extract', help = 'only create JSON description from CLI modules (no DB access)')

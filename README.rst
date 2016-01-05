@@ -110,7 +110,7 @@ latest stable elasticsearch and kibana tarballs (logstash is not necessary / use
 Elasticsearch_ is written in Java, so you can basically unpack the tarball and run
 ``bin/elasticsearch``, and the server should be running on http://localhost:9200/ (yes,
 you can just try that URL in the browser, and you should get some status JSON).  This
-default location is also built into ``index_from_json.py``, so you may immediately start
+default location is also built into the indexer script, so you may immediately start
 indexing.  One may use http://localhost:9200/cli/cli/_search?pretty=1 to check whether
 there is data in the index.
 

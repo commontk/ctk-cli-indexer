@@ -46,6 +46,8 @@ def _scan_directories_helper(base_directories, verbose, skip_errors):
         try:
             timestamp, doc = extract_cli_properties(exe_filename)
         except Exception, e:
+            if not skip_errors:
+                raise
             sys.stderr.write('ERROR (skipping %s): %s\n' % (os.path.basename(exe_filename), e))
             errors.append(exe_filename)
             continue

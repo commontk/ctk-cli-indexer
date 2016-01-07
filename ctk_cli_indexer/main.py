@@ -43,7 +43,9 @@ def index(args):
         with file(args.path[0]) as f:
             docs = simplejson.load(f)
     else:
-        docs = scan_directories(args.path)
+        errors, docs = try_scan_directories(args.path)
+        if errors:
+            sys.stderr.write('%d CLI executables had fatal errors and will not be indexed.\n' % (len(errors), ))
 
     # TODO: at the moment, the commandline is limited to *one* host/port, and no SSL or URL prefix
     es = elasticsearch.Elasticsearch([dict(host = args.host, port = args.port)])

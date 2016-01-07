@@ -26,6 +26,10 @@ def extract_cli_properties(exe_filename):
 
 
 def listCLIExecutables(paths):
+    """Given a list of directories or files, return a list of CLI executable
+    paths found in it.  If given paths to XML files directly (not directories
+    with XMLs in them), return them as well (assuming some intention).
+    """
     import ctk_cli
 
     for path in paths:
@@ -34,6 +38,12 @@ def listCLIExecutables(paths):
                 yield exe_filename
         elif ctk_cli.isCLIExecutable(path):
             yield path
+        elif os.path.isfile(path):
+            with file(path) as f:
+                if '<executable>' in f.read(200):
+                    yield path
+                else:
+                    sys.stderr.write('skipping %s (no CLI or XML)...\n' % (os.path.basename(exe_filename), ))
 
 
 def _scan_directories_helper(base_directories, verbose, skip_errors):

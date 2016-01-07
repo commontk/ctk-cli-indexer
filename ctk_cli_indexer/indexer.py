@@ -38,7 +38,7 @@ def update_elasticsearch_index(es, docs, source):
                                 source = source)
                             )),
                         fields = ['_id'],
-                        size = 100000)['hits']['hits']]
+                        size = 10000)['hits']['hits']]
     except elasticsearch.exceptions.NotFoundError:
         existing = []
 
@@ -49,7 +49,7 @@ def update_elasticsearch_index(es, docs, source):
         timestamp = datetime.datetime.fromtimestamp(timestamp)
 
         try:
-            old = es.get(INDEX, doc_id, DOC_TYPE)
+            old = es.get(INDEX, doc_id, DOC_TYPE) # FIXME: with elasticsearch-2.1.1, this produces 404 warnings
         except elasticsearch.exceptions.NotFoundError:
             es.index(INDEX, DOC_TYPE, body = doc, id = doc_id, timestamp = timestamp)
             sys.stdout.write("added new document '%s'.\n" % doc_id)

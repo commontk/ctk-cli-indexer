@@ -15,7 +15,8 @@
 
 import sys, os, argparse, logging
 import simplejson
-from ctk_cli_indexer.extractor import try_scan_directories
+from .extractor import try_scan_directories
+
 
 class VerboseErrorParser(argparse.ArgumentParser):
     def error(self, message):
@@ -36,7 +37,7 @@ def index(args):
     # (and index without ctk_cli being available)
     import elasticsearch
     from ctk_cli import isCLIExecutable
-    from ctk_cli_indexer.indexer import create_elasticsearch_index, update_elasticsearch_index
+    from .indexer import create_elasticsearch_index, update_elasticsearch_index
 
     if len(args.path) == 1 and not (os.path.isdir(args.path[0]) or isCLIExecutable(args.path[0])):
         with file(args.path[0]) as f:

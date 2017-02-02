@@ -92,7 +92,10 @@ def main():
 
 
     args = parser.parse_args()
-    args.action(args)
+    if 'action' in args:
+        args.action(args)
+    else:
+        parser.error('Specifiy action (extract or index)')
 
 
 if __name__ == '__main__':

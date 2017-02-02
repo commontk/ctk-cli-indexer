@@ -40,7 +40,7 @@ def index(args):
     from .indexer import create_elasticsearch_index, update_elasticsearch_index
 
     if len(args.path) == 1 and not (os.path.isdir(args.path[0]) or isCLIExecutable(args.path[0])):
-        with file(args.path[0]) as f:
+        with open(args.path[0]) as f:
             docs = simplejson.load(f)
     else:
         errors, docs = try_scan_directories(args.path)

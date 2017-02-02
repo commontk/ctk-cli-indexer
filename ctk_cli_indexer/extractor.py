@@ -39,7 +39,7 @@ def listCLIExecutables(paths):
         elif ctk_cli.isCLIExecutable(path):
             yield path
         elif os.path.isfile(path):
-            with file(path) as f:
+            with open(path) as f:
                 if '<executable>' in f.read(200):
                     yield path
                 else:

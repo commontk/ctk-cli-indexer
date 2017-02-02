@@ -9,7 +9,7 @@ with codecs.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     readme = f.read()
 
 # reqs is a list of requirement spec strings
-with file('requirements.txt') as f:
+with open('requirements.txt') as f:
     reqs = [req.strip() for req in f]
 
 setup(name='ctk-cli-indexer',

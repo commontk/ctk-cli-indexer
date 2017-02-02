@@ -13,8 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import sys, os, argparse, logging
-import simplejson
+import sys, os, argparse, logging, json
 from .extractor import try_scan_directories
 
 
@@ -27,7 +26,7 @@ class VerboseErrorParser(argparse.ArgumentParser):
 
 def extract(args):
     errors, docs = try_scan_directories(args.base_directory)
-    simplejson.dump(docs, args.json_filename, indent = '  ')
+    json.dump(docs, args.json_filename, indent = '  ')
     args.json_filename.write('\n')
     if errors:
         sys.stderr.write('%d CLI executables had fatal errors and were excluded from the output.\n' % (len(errors), ))
@@ -41,7 +40,7 @@ def index(args):
 
     if len(args.path) == 1 and not (os.path.isdir(args.path[0]) or isCLIExecutable(args.path[0])):
         with open(args.path[0]) as f:
-            docs = simplejson.load(f)
+            docs = json.load(f)
     else:
         errors, docs = try_scan_directories(args.path)
         if errors:
